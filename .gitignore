@@ -6,3 +6,8 @@ data/fetch/__pycache__/fmp_client.cpython-313.pyc
 data/transform/__pycache__/
 data/process/__pycache__/
 .streamlit/
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
