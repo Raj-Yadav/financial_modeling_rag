@@ -4,6 +4,11 @@ from data.process.chunk_data import chunk_docs
 from db.vector_store import create_vector_db
 from rag.retriever import get_retriever
 from rag.rag_chain import build_chain
+import transformers
+
+# Silence Hugging Face warnings
+transformers.logging.set_verbosity_error()
+
 
 def run(symbol, question):
     raw = fetch_all(symbol)
