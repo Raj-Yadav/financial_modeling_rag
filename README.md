@@ -3,43 +3,44 @@
 A Retrieval-Augmented Generation pipeline that generates structured financial
 reports for any publicly traded stock using real market data and a local LLM.
 
+```mermaid
 flowchart TD
-    A([" User — Streamlit UI \nEnter stock symbol + cache settings"])
+    A([" User — Streamlit UI <br>Enter stock symbol + cache settings"])
 
     subgraph CACHE["Cache-first check"]
-        B{"is_data_fresh?\n SQLite lookup"}
+        B{"is_data_fresh?<br> SQLite lookup"}
     end
 
     subgraph FETCH["Data layer — FMP API"]
-        D["fetch_all\nprofile · metrics · ratios · price"]
-        E["save_raw_data\nWrite to financial_data.db"]
+        D["fetch_all<br>profile · metrics · ratios · price"]
+        E["save_raw_data<br>Write to financial_data.db"]
     end
 
     subgraph DB["SQLite — financial_data.db"]
-        C[("profile\nmetrics\nratios\nprice_history")]
+        C[("profile<br>metrics<br>ratios<br>price_history")]
     end
 
     subgraph TRANSFORM["Transform & chunk"]
-        F["build_documents\nFlattens JSON → text docs"]
-        G["chunk_docs\nRecursiveCharacterTextSplitter\nchunk=300 · overlap=50"]
+        F["build_documents<br>Flattens JSON → text docs"]
+        G["chunk_docs<br>RecursiveCharacterTextSplitter<br>chunk=300 · overlap=50"]
     end
 
     subgraph VECTOR["Embedding & retrieval"]
-        H["create_vector_db\nFAISS + all-MiniLM-L6-v2"]
-        I["get_retriever\nTop-5 relevant chunks"]
+        H["create_vector_db<br>FAISS + all-MiniLM-L6-v2"]
+        I["get_retriever<br>Top-5 relevant chunks"]
     end
 
     subgraph LLM["Generation — Ollama"]
-        J["build_chain\nfalcon:7b · temp 0.2\nFinancial analyst prompt"]
+        J["build_chain<br>falcon:7b · temp 0.2<br>Financial analyst prompt"]
     end
 
-    K([" Report\nOverview · Performance · Risks · Conclusion "])
+    K([" Report<br>Overview · Performance · Risks · Conclusion "])
 
     A --> B
-    B -- "Cache hit\n(data fresh)" --> C
-    B -- "Cache miss\nor force refresh" --> D
+    B -- "Cache hit<br>(data fresh)" --> C
+    B -- "Cache miss<br>or force refresh" --> D
     D --> E --> C
-    C --> F --> G --> H --> I --> J --> K
+    C --> F --> G --> H --> I --> J --> K```
 
 ## How it works
 
