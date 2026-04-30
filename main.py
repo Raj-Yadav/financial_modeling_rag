@@ -15,7 +15,7 @@ def run(symbol, question):
 
     chain = build_chain(retriever)
 
-    return chain.run(question)
+    return chain.invoke({"input": question})
 
 if __name__ == "__main__":
     result = run("AAPL", "Generate financial report")

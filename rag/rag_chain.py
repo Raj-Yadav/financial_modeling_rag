@@ -1,25 +1,19 @@
-from langchain.chains import RetrievalQA
-
+from langchain_classic.chains import create_retrieval_chain
+from langchain_classic.chains.combine_documents import create_stuff_documents_chain
 from langchain_ollama import ChatOllama
-from langchain_core.prompts import PromptTemplate
-
+from langchain_core.prompts import ChatPromptTemplate
 from rag.prompt_templates import PROMPT
 
 def build_chain(retriever):
-    # Connect to the local Docker container running Ollama
     llm = ChatOllama(
         model="falcon:7b",
         temperature=0.2,
-        base_url="http://localhost:11434" # This is the port Docker exposed!
+        base_url="http://localhost:11434"
     )
 
-    prompt = PromptTemplate(
-        input_variables=["context", "question"],
-        template=PROMPT
-    )
-
-    return RetrievalQA.from_chain_type(
-        llm=llm,
-        retriever=retriever,
-        chain_type_kwargs={"prompt": prompt}
-    )
+    # Use ChatPromptTemplate instead of PromptTemplate
+    prompt = ChatPromptTemplate.from_template(PROMPT)
+    
+    # This combination replaces the old RetrievalQA
+    combine_docs_chain = create_stuff_documents_chain(llm, prompt)
+    return create_retrieval_chain(retriever, combine_docs_chain)

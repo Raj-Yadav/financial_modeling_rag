@@ -11,5 +11,5 @@ Generate a report:
 - Risks
 - Conclusion
 
-Question: {question}
+Question: {input}
 """
