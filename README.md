@@ -40,7 +40,7 @@ flowchart TD
     B -- "Cache hit<br>(data fresh)" --> C
     B -- "Cache miss<br>or force refresh" --> D
     D --> E --> C
-    C --> F --> G --> H --> I --> J --> K```
+    C --> F --> G --> H --> I --> J --> K
 
 ## How it works
 
