@@ -73,26 +73,8 @@ flowchart TD
 | LLM | Ollama `falcon:7b` (local) |
 | UI | Streamlit |
 
-## Project structure
-financial_modeling_rag/
-├── app/streamlit_app.py        # Web UI
-├── data/
-│   ├── fetch/fmp_client.py     # FMP API client
-│   ├── transform/transform_data.py  # JSON → text docs
-│   └── process/chunk_data.py   # Text splitting
-├── db/
-│   ├── storage.py              # SQLite read/write + cache logic
-│   └── vector_store.py         # FAISS vector DB
-├── rag/
-│   ├── rag_chain.py            # LangChain RAG chain
-│   ├── retriever.py            # Top-k retriever
-│   └── prompt_templates.py     # Financial analyst prompt
-├── utils/config.py             # API key loading (.env)
-├── main.py                     # Pipeline entry point
-└── requirements.txt
 
-
-## Setup
+## Project Setup
 
 ```bash
 pip install -r requirements.txt
