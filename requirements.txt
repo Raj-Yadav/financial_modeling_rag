@@ -20,3 +20,4 @@ asyncio
 load_dotenv
 langchain-core 
 langchain-text-splitters
+langchain-huggingface
