@@ -1,4 +1,4 @@
-# data/fetch/fmp_client.py
+
 import requests
 from utils.config import FMP_API_KEY
 

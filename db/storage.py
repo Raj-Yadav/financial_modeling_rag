@@ -1,27 +1,15 @@
-"""
-db/storage.py
-
-Persists raw FMP API data (profile, metrics, ratios, price) to SQLite.
-  → single `db/financial_data.db` file, one table per data type
-
-Usage:
-    from db.storage import save_raw_data, is_data_fresh, load_raw_from_sqlite
-    save_raw_data(raw, symbol)
-"""
-
 import os
 import sqlite3
 import pandas as pd
 from datetime import datetime, timedelta
 
-# ── Path ─────────────────────────────────────────────────────────────────────
+# Path 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB_PATH  = os.path.join(BASE_DIR, "db", "financial_data.db")
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
+
 #  HELPERS – normalise raw API payload into flat dicts
-# ═══════════════════════════════════════════════════════════════════════════════
 
 def _normalise_profile(raw: dict, symbol: str) -> list[dict]:
     p = raw.get("profile", [{}])
@@ -114,9 +102,8 @@ def _normalise_prices(raw: dict, symbol: str) -> list[dict]:
     return rows
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
+
 #  SQLite – schema
-# ═══════════════════════════════════════════════════════════════════════════════
 
 _CREATE_PROFILE = """
 CREATE TABLE IF NOT EXISTS profile (
@@ -191,9 +178,7 @@ CREATE TABLE IF NOT EXISTS price_history (
 );"""
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 #  SQLite – internal helpers
-# ═══════════════════════════════════════════════════════════════════════════════
 
 def _get_conn() -> sqlite3.Connection:
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
@@ -216,9 +201,8 @@ def _insert_rows(conn: sqlite3.Connection, table: str, rows: list[dict]):
     conn.commit()
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
+
 #  PUBLIC API
-# ═══════════════════════════════════════════════════════════════════════════════
 
 def save_raw_data(raw: dict, symbol: str):
     """
@@ -235,7 +219,7 @@ def save_raw_data(raw: dict, symbol: str):
         _insert_rows(conn, "metrics",       _normalise_metrics(raw, symbol))
         _insert_rows(conn, "ratios",        _normalise_ratios(raw, symbol))
         _insert_rows(conn, "price_history", _normalise_prices(raw, symbol))
-        print(f"[storage] ✅  Saved to SQLite → {DB_PATH}  (symbol={symbol})")
+        print(f"[storage]  Saved to SQLite → {DB_PATH}  (symbol={symbol})")
     finally:
         conn.close()
 
